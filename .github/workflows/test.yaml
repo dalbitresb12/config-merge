@@ -5,16 +5,23 @@ on: push
 jobs:
   test:
     runs-on: ubuntu-latest
-
+    env:
+      IMAGE_NAME: ${{ vars.IMAGE_NAME || 'boxboat/config-merge' }}
+    permissions:
+      contents: read
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
-
+        uses: actions/checkout@v4
       - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
+        uses: docker/setup-buildx-action@v3
       - name: Build
-        run: ./build.sh
-
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: ${{ env.IMAGE_NAME }}
       - name: Test
-        run: ./test.sh
+        run: ./test.sh "$IMAGE_NAME"
