@@ -26,12 +26,14 @@ let array = 'merge'
 let doEnvsubst = true
 let format = 'yaml'
 let obj = {}
+let outputFile = null
 
 // prints the help message
 function printHelp() {
     console.error("boxboat/config-merge [flags] file1 [file2] ... [fileN]")
     console.error("-a, --array         merge|overwrite|concat   whether to merge, overwrite, or concatenate arrays.  defaults to merge")
     console.error("-f, --format        json|toml|yaml   whether to output json, toml, or yaml.  defaults to yaml")
+    console.error("-o, --output        filename   writes to file directly instead of sending the output to stdout")
     console.error("-h  --help          print the help message")
     console.error("    --no-envsubst   disable substituting env vars")
     console.error("    files ending in .env and .sh will be sourced and used for environment variable substitution")
@@ -101,6 +103,9 @@ for (let arg of args) {
                 printHelp()
                 process.exit(1)
             }
+        } else if (setFlag == "o") {
+            outputFile = arg
+            setFlag = null
         }
         else if (arg == "--no-envsubst") {
             doEnvsubst = false
@@ -110,6 +115,9 @@ for (let arg of args) {
         }
         else if (arg == "-f" || arg == "--format") {
             setFlag = "f"
+        }
+        else if (arg == "-o" || arg == "--output") {
+            setFlag = "o"
         }
         else {
             break
@@ -224,10 +232,14 @@ if (format == "json") {
     serialized = YAML.stringify(obj, options={simpleKeys: true})
 }
 
-if (format == "json" || format == "toml") {
-    // json and toml do not print a newline by default
-    console.log(serialized)
+if (outputFile) {
+    fs.writeFileSync(outputFile, serialized, { encoding: "utf-8" })
 } else {
-    // yaml prints a newline by default
-    process.stdout.write(serialized)
+    if (format == "json" || format == "toml") {
+        // json and toml do not print a newline by default
+        console.log(serialized)
+    } else {
+        // yaml prints a newline by default
+        process.stdout.write(serialized)
+    }
 }

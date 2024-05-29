@@ -15,6 +15,7 @@ docker run --rm boxboat/config-merge -h
 boxboat/config-merge [-fnh] file1 [file2] ... [fileN]
 -a, --array    merge|overwrite|concat   whether to merge, overwrite, or concatenate arrays.  defaults to merge
 -f, --format   json|toml|yaml           whether to output json, toml, or yaml.  defaults to yaml
+-o, --output   filename                 writes to file directly instead of sending the output to stdout
 -h  --help     print the help message
     files ending in .env and .sh will be sourced and used for environment variable substitution
     files ending in .json, .js, .toml, .yaml, and .yml will be merged
