@@ -72,6 +72,16 @@ function readFileAndSubEnv(file) {
     return doEnvsubst ? envsubst(text) : text.toString('utf8');
 }
 
+// check if we are running in debug mode with VS Code
+// split only if we have either 1 or no arguments
+// this should only happen while debugging, because this is
+// a really naive way of doing it (paths with spaces might get split as well)
+// we can ignore those edge cases because this is only intended
+// for quick debugging with VS Code
+if (process.env.VSCODE_LAUNCH_SPLIT_ARGS === "true" && args.length <= 1) {
+    args = args[0].split(" ")
+}
+
 // check empty args
 if (args.length == 0) {
     printHelp()
