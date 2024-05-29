@@ -14,7 +14,8 @@ $ docker run --rm boxboat/config-merge -h
 
 boxboat/config-merge [flags] file1 [file2] ... [fileN]
 -a, --array         merge|overwrite|concat   whether to merge, overwrite, or concatenate arrays.  defaults to merge
--f, --format        json|json5|toml|yaml   whether to output json, json5, toml, or yaml.  defaults to yaml
+-f, --format        json|json5|toml|yaml     whether to output json, json5, toml, or yaml.  defaults to yaml
+-o, --output        filename                 writes to file directly instead of sending the output to stdout
 -h  --help          print the help message
     --no-envsubst   disable substituting env vars
     files ending in .env and .sh will be sourced and used for environment variable substitution
